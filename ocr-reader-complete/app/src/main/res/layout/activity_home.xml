@@ -1,74 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/common_google_signin_btn_text_dark_default"
     android:backgroundTint="#F2E7D2"
+    android:orientation="vertical"
     tools:context=".HomeActivity">
-
-    <Button
-        android:id="@+id/button"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_marginTop="300dp"
-        android:layout_marginEnd="44dp"
-        android:backgroundTint="#E6ECEF"
-        android:text="+"
-        android:textColor="#242C35"
-        android:textSize="100sp"
-        app:layout_constraintEnd_toStartOf="@+id/button2"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/button2"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:backgroundTint="#E6ECEF"
-        android:text="-"
-        android:textColor="#242C35"
-        android:textSize="100sp"
-        tools:layout_editor_absoluteX="226dp"
-        tools:layout_editor_absoluteY="300dp" />
-
-    <Button
-        android:id="@+id/button3"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_marginTop="80dp"
-        android:layout_marginEnd="44dp"
-        android:backgroundTint="#E6ECEF"
-        android:text="×"
-        android:textColor="#242C35"
-        android:textSize="100sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/button4"
-        app:layout_constraintTop_toBottomOf="@+id/button"
-        app:layout_constraintVertical_bias="0.0" />
-
-    <Button
-        android:id="@+id/button4"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_marginTop="80dp"
-        android:backgroundTint="#E6ECEF"
-        android:text="÷"
-        android:textColor="#242C35"
-        android:textSize="100sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button2"
-        app:layout_constraintVertical_bias="0.0"
-        tools:layout_editor_absoluteX="226dp" />
 
     <TextView
         android:id="@+id/textview1"
         android:layout_width="327dp"
         android:layout_height="114dp"
+        android:text="加減乘除大考驗"
         android:textAlignment="center"
         android:textColor="#242C35"
-        android:textSize="45sp"
-        tools:layout_editor_absoluteX="42dp"
-        tools:layout_editor_absoluteY="122dp"
-        tools:text="加減乘除大考驗" />
-</android.support.constraint.ConstraintLayout>
+        android:textSize="45sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/addButton"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:backgroundTint="#E6ECEF"
+            android:text="+"
+            android:textColor="#242C35"
+            android:textSize="100sp" />
+
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:backgroundTint="#E6ECEF"
+            android:text="-"
+            android:textColor="#242C35"
+            android:textSize="100sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/button3"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:backgroundTint="#E6ECEF"
+            android:text="×"
+            android:textColor="#242C35"
+            android:textSize="100sp" />
+
+        <Button
+            android:id="@+id/button4"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:backgroundTint="#E6ECEF"
+            android:text="÷"
+            android:textColor="#242C35"
+            android:textSize="100sp" />
+    </LinearLayout>
+
+</LinearLayout>
