@@ -14,7 +14,7 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/textViewF"
             android:layout_width="match_parent"
             android:layout_height="260dp"
             android:layout_marginLeft="100sp"
@@ -31,7 +31,7 @@
             android:layout_weight="1">
 
             <TextView
-                android:id="@+id/textView2"
+                android:id="@+id/textViewMode"
                 android:layout_width="100sp"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -40,7 +40,7 @@
                 android:textSize="100sp" />
 
             <TextView
-                android:id="@+id/textView3"
+                android:id="@+id/textViewE"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -49,19 +49,27 @@
                 android:text="2"
                 android:textColor="#242c35"
                 android:textSize="100sp" />
+
         </LinearLayout>
 
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_weight="1"
+        android:text="60" />
+
     <com.google.android.gms.samples.vision.ocrreader.ui.camera.CameraSourcePreview
         android:id="@+id/preview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <com.google.android.gms.samples.vision.ocrreader.ui.camera.GraphicOverlay
             android:id="@+id/graphicOverlay"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="wrap_content" />
 
     </com.google.android.gms.samples.vision.ocrreader.ui.camera.CameraSourcePreview>
 

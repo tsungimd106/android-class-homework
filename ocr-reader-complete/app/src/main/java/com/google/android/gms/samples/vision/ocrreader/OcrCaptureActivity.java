@@ -27,6 +27,7 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.hardware.Camera;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.speech.tts.TextToSpeech;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -37,6 +38,8 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -57,7 +60,24 @@ import java.util.Locale;
  */
 public final class OcrCaptureActivity extends AppCompatActivity {
     private static final String TAG = "OcrCaptureActivity";
+    private String modeStr;
+    private Boolean difficult;
+    private TextView textViewMode, textViewFront, textViewEnd;
+    private int[][][] game;
+private CountDownTimer c=new CountDownTimer(60*1000,1000) {
+    @Override
+    public void onTick(long l) {
+        System.out.println("enter this");
+        System.out.println(l/1000);
+    }
 
+    @Override
+    public void onFinish() {
+        System.out.println("enter here");
+        System.out.println("done");
+    }
+};
+    private int now = 1, right = 0, mode, last;
     // Intent request code to handle updating play services if needed.
     private static final int RC_HANDLE_GMS = 9001;
 
@@ -80,6 +100,9 @@ public final class OcrCaptureActivity extends AppCompatActivity {
     // A TextToSpeech engine for speaking a String value.
     private TextToSpeech tts;
 
+    public OcrCaptureActivity() {
+    }
+
     /**
      * Initializes the UI and creates the detector pipeline.
      */
@@ -90,7 +113,32 @@ public final class OcrCaptureActivity extends AppCompatActivity {
 
         preview = (CameraSourcePreview) findViewById(R.id.preview);
         graphicOverlay = (GraphicOverlay<OcrGraphic>) findViewById(R.id.graphicOverlay);
+        modeStr = getIntent().getStringExtra("mode");
+        difficult = getIntent().getBooleanExtra("difficult", false);
+        giveGame();
+        switch (modeStr) {
+            case "+":
+                mode = 0;
+                break;
+            case "-":
+                mode = 1;
+                break;
+            case "*":
+                mode = 2;
+                break;
+            case "/":
+                mode = 3;
+                break;
 
+        }
+
+        last = game[mode].length;
+        textViewMode = findViewById(R.id.textViewMode);
+        textViewFront = findViewById(R.id.textViewF);
+        textViewEnd = findViewById(R.id.textViewE);
+        textViewMode.setText(modeStr);
+        textViewFront.setText(String.valueOf(game[mode][0][0]));
+        textViewEnd.setText(String.valueOf(game[mode][0][1]));
         // Set good defaults for capturing text.
         boolean autoFocus = true;
         boolean useFlash = false;
@@ -125,6 +173,7 @@ public final class OcrCaptureActivity extends AppCompatActivity {
                     }
                 };
         tts = new TextToSpeech(this.getApplicationContext(), listener);
+        c.start();
     }
 
     /**
@@ -172,7 +221,7 @@ public final class OcrCaptureActivity extends AppCompatActivity {
      * Creates and starts the camera.  Note that this uses a higher resolution in comparison
      * to other detection examples to enable the ocr detector to detect small text samples
      * at long distances.
-     *
+     * <p>
      * Suppressing InlinedApi since there is a check that the minimum version is met before using
      * the constant.
      */
@@ -214,12 +263,12 @@ public final class OcrCaptureActivity extends AppCompatActivity {
         // to other detection examples to enable the text recognizer to detect small pieces of text.
         cameraSource =
                 new CameraSource.Builder(getApplicationContext(), textRecognizer)
-                .setFacing(CameraSource.CAMERA_FACING_BACK)
-                .setRequestedPreviewSize(1280, 1024)
-                .setRequestedFps(2.0f)
-                .setFlashMode(useFlash ? Camera.Parameters.FLASH_MODE_TORCH : null)
-                .setFocusMode(autoFocus ? Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO : null)
-                .build();
+                        .setFacing(CameraSource.CAMERA_FACING_BACK)
+                        .setRequestedPreviewSize(1280, 1024)
+                        .setRequestedFps(2.0f)
+                        .setFlashMode(useFlash ? Camera.Parameters.FLASH_MODE_TORCH : null)
+                        .setFocusMode(autoFocus ? Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO : null)
+                        .build();
     }
 
     /**
@@ -283,7 +332,7 @@ public final class OcrCaptureActivity extends AppCompatActivity {
         if (grantResults.length != 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             Log.d(TAG, "Camera permission granted - initialize the camera source");
             // we have permission, so create the camerasource
-            boolean autoFocus = getIntent().getBooleanExtra(AutoFocus,true);
+            boolean autoFocus = getIntent().getBooleanExtra(AutoFocus, true);
             boolean useFlash = getIntent().getBooleanExtra(UseFlash, false);
             createCameraSource(autoFocus, useFlash);
             return;
@@ -347,13 +396,81 @@ public final class OcrCaptureActivity extends AppCompatActivity {
                 Log.d(TAG, "text data is being spoken! " + text.getValue());
                 // Speak the string.
                 tts.speak(text.getValue(), TextToSpeech.QUEUE_ADD, null, "DEFAULT");
-            }
-            else {
+                final AlertDialog.Builder builder = new AlertDialog.Builder(OcrCaptureActivity.this).setTitle("詳細資料");
+                final LinearLayout linearLayout = new LinearLayout(OcrCaptureActivity.this);
+                linearLayout.setOrientation(LinearLayout.VERTICAL);
+                linearLayout.setPadding(100, 0, 0, 0);
+                TextView textViewLable = new TextView(OcrCaptureActivity.this);
+                textViewLable.setText("確認是" + text.getValue());
+                linearLayout.addView(textViewLable);
+
+                builder.setView(linearLayout);
+                builder.setNegativeButton("關閉", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                });
+                final TextBlock finalText = text;
+                builder.setPositiveButton("確認", new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        if (finalText.getValue().equals(String.valueOf(game[mode][now - 1][2]))) {
+                            right++;
+                        }
+//                        System.out.println(finalText.getValue());
+//                        System.out.println(String.valueOf(game[mode][now-1][2]));
+//                        System.out.println(finalText.getValue().endsWith(String.valueOf(game[mode][now-1][2])));
+                        if (now != last) {
+                            textViewFront.setText(String.valueOf(game[mode][now][0]));
+                            textViewEnd.setText(String.valueOf(game[mode][now][1]));
+                            now++;
+                        } else {
+                            final AlertDialog.Builder builderResult = new AlertDialog.Builder(OcrCaptureActivity.this).setTitle("詳細資料");
+                            LinearLayout linearLayoutResult = new LinearLayout(OcrCaptureActivity.this);
+                            linearLayoutResult.setOrientation(LinearLayout.VERTICAL);
+                            linearLayoutResult.setPadding(100, 0, 0, 0);
+                            TextView textViewLableResult = new TextView(OcrCaptureActivity.this);
+                            textViewLableResult.setText("遊戲結果");
+                            linearLayoutResult.addView(textViewLableResult);
+                            TextView textViewResult = new TextView(OcrCaptureActivity.this);
+                            textViewResult.setText(String.format("共%d題\n答對%d題", last, right));
+                            linearLayoutResult.addView(textViewResult);
+
+                            builderResult.setView(linearLayoutResult);
+                            builderResult.setNegativeButton("關閉", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    Intent intent = new Intent(OcrCaptureActivity.this, HomeActivity.class);
+                                    startActivity(intent);
+                                }
+                            });
+                            if (!difficult) {
+                                builderResult.setPositiveButton("確定", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        difficult=true;
+                                        giveGame();
+                                        now = 1;
+                                        right = 0;
+                                        last = game[mode].length;
+                                        textViewFront.setText(String.valueOf(game[mode][0][0]));
+                                        textViewEnd.setText(String.valueOf(game[mode][0][1]));
+                                    }
+                                });
+                            }
+                            AlertDialog dialogResult = builderResult.create();
+                            dialogResult.show();
+                        }
+                    }
+                });
+                AlertDialog dialog = builder.create();
+                dialog.show();
+            } else {
                 Log.d(TAG, "text data is null");
             }
-        }
-        else {
-            Log.d(TAG,"no text detected");
+        } else {
+            Log.d(TAG, "no text detected");
         }
         return text != null;
     }
@@ -419,6 +536,24 @@ public final class OcrCaptureActivity extends AppCompatActivity {
             if (cameraSource != null) {
                 cameraSource.doZoom(detector.getScaleFactor());
             }
+        }
+    }
+
+    private void giveGame() {
+        if (difficult) {
+            game = new int[][][]{
+                    {{52, 36, 88}, {37, 92, 129}, {59, 32, 91}, {48, 43, 91}, {57, 72, 129}}
+                    , {{92, 35, 57}, {79, 22, 57}, {52, 34, 18}, {45, 27, 18}, {81, 23, 58}}
+                    , {{11, 11, 121}, {12, 10, 120}, {11, 10, 110}, {12, 15, 185}, {12, 12, 144}}
+                    , {{60, 12, 5}, {63, 21, 3}, {70, 14, 5}, {90, 45, 2}, {81, 27, 3}}
+            };
+        } else {
+            game = new int[][][]{
+                    {{5, 4, 9}, {8, 6, 14}, {3, 7, 10}, {6, 3, 9}, {2, 7, 9}}
+                    , {{9, 5, 4}, {8, 3, 5}, {5, 2, 3}, {7, 4, 3}, {7, 3, 4}}
+                    , {{2, 7, 14}, {9, 2, 18}, {5, 2, 10}, {3, 3, 9}, {8, 7, 56}}
+                    , {{9, 3, 3}, {8, 4, 2}, {4, 2, 2}, {6, 2, 3}, {8, 2, 4}}
+            };
         }
     }
 }
