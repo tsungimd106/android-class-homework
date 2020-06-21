@@ -14,8 +14,12 @@ import android.widget.TextView;
 
 import org.w3c.dom.Text;
 
+
 public class HomeActivity extends AppCompatActivity {
 private Button add,unadd,times,into;
+private Boolean difficult=false;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,6 +57,7 @@ private Button add,unadd,times,into;
             }
         });
     }
+
     private void chanegePage(final String mode){
         RadioGroup level = new RadioGroup(HomeActivity.this);
 
@@ -63,8 +68,9 @@ private Button add,unadd,times,into;
         TextView textViewLable =new TextView(HomeActivity.this);
         textViewLable.setText("123");
         linearLayout.addView(textViewLable);
-        RadioButton high=new RadioButton(HomeActivity.this);
-        RadioButton low=new RadioButton(HomeActivity.this);
+        final RadioButton high=new RadioButton(HomeActivity.this);
+        final RadioButton low=new RadioButton(HomeActivity.this);
+        low.setSelected(true);
         high.setText("十位數");
         low.setText("個位數");
         level.addView(high);
@@ -82,10 +88,19 @@ private Button add,unadd,times,into;
             public void onClick(DialogInterface dialogInterface, int i) {
                 Intent gonext = new Intent(HomeActivity.this,OcrCaptureActivity.class);
                 gonext.putExtra("mode",mode);
-//                gonext.putExtra("difficult",difficult);
+                gonext.putExtra("difficult",difficult);
                 startActivity(gonext);
             }
         });
+        level.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+
+                difficult=(checkedId==high.getId()?true:false);
+
+            }
+        });
+
         AlertDialog dialog = builder.create();
         dialog.show();
 
