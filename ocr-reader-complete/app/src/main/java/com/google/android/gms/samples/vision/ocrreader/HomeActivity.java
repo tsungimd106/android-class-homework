@@ -61,12 +61,12 @@ private Boolean difficult=false;
     private void chanegePage(final String mode){
         RadioGroup level = new RadioGroup(HomeActivity.this);
 
-        final AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this).setTitle("詳細資料");
+        final AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this).setTitle("請選擇挑戰難度");
         LinearLayout linearLayout = new LinearLayout(HomeActivity.this);
         linearLayout.setOrientation(LinearLayout.VERTICAL);
         linearLayout.setPadding(100, 0, 0, 0);
         TextView textViewLable =new TextView(HomeActivity.this);
-        textViewLable.setText("123");
+        textViewLable.setText("");
         linearLayout.addView(textViewLable);
         final RadioButton high=new RadioButton(HomeActivity.this);
         final RadioButton low=new RadioButton(HomeActivity.this);
