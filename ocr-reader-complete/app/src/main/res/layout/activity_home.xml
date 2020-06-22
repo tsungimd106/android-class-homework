@@ -12,12 +12,26 @@
 
     <TextView
         android:id="@+id/textview1"
-        android:layout_width="327dp"
+        android:layout_width="match_parent"
         android:layout_height="114dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
         android:text="加減乘除大考驗"
         android:textAlignment="center"
         android:textColor="#242C35"
         android:textSize="45sp" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="65dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:foregroundTint="#FFFFFF"
+        android:gravity="center"
+        android:text="請點選以下四個按鈕，便可以選取要挑戰的   難度，並開始進入遊戲。"
+        android:textColor="#242C35"
+        android:textSize="18sp" />
 
     <LinearLayout
         android:layout_width="wrap_content"

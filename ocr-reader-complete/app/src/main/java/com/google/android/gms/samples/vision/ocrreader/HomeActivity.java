@@ -16,15 +16,15 @@ import org.w3c.dom.Text;
 
 
 public class HomeActivity extends AppCompatActivity {
-private Button add,unadd,times,into;
-private Boolean difficult=false;
+    private Button add, unadd, times, into;
+    private Boolean difficult = false;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        add=findViewById(R.id.addButton);
+        add = findViewById(R.id.addButton);
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -32,7 +32,7 @@ private Boolean difficult=false;
                 chanegePage("+");
             }
         });
-        unadd =findViewById(R.id.button2);
+        unadd = findViewById(R.id.button2);
         unadd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -40,7 +40,7 @@ private Boolean difficult=false;
                 chanegePage("-");
             }
         });
-        times=findViewById(R.id.button3);
+        times = findViewById(R.id.button3);
         times.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -48,7 +48,7 @@ private Boolean difficult=false;
                 chanegePage("×");
             }
         });
-        into=findViewById(R.id.button4);
+        into = findViewById(R.id.button4);
         into.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -58,23 +58,24 @@ private Boolean difficult=false;
         });
     }
 
-    private void chanegePage(final String mode){
+    private void chanegePage(final String mode) {
         RadioGroup level = new RadioGroup(HomeActivity.this);
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this).setTitle("請選擇挑戰難度");
         LinearLayout linearLayout = new LinearLayout(HomeActivity.this);
         linearLayout.setOrientation(LinearLayout.VERTICAL);
         linearLayout.setPadding(100, 0, 0, 0);
-        TextView textViewLable =new TextView(HomeActivity.this);
+        TextView textViewLable = new TextView(HomeActivity.this);
         textViewLable.setText("");
         linearLayout.addView(textViewLable);
-        final RadioButton high=new RadioButton(HomeActivity.this);
-        final RadioButton low=new RadioButton(HomeActivity.this);
-        low.setSelected(true);
+        final RadioButton high = new RadioButton(HomeActivity.this);
+        final RadioButton low = new RadioButton(HomeActivity.this);
+//        low.setSelected(false);
         high.setText("十位數");
         low.setText("個位數");
         level.addView(high);
         level.addView(low);
+        level.check(low.getId());
         linearLayout.addView(level);
         builder.setView(linearLayout);
         builder.setNegativeButton("關閉", new DialogInterface.OnClickListener() {
@@ -86,9 +87,9 @@ private Boolean difficult=false;
 
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                Intent gonext = new Intent(HomeActivity.this,OcrCaptureActivity.class);
-                gonext.putExtra("mode",mode);
-                gonext.putExtra("difficult",difficult);
+                Intent gonext = new Intent(HomeActivity.this, OcrCaptureActivity.class);
+                gonext.putExtra("mode", mode);
+                gonext.putExtra("difficult", difficult);
                 startActivity(gonext);
             }
         });
@@ -96,7 +97,7 @@ private Boolean difficult=false;
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
 
-                difficult=(checkedId==high.getId()?true:false);
+                difficult = (checkedId == high.getId() ? true : false);
 
             }
         });

@@ -62,12 +62,12 @@ public final class OcrCaptureActivity extends AppCompatActivity {
     private static final String TAG = "OcrCaptureActivity";
     private String modeStr;
     private Boolean difficult;
-    private TextView textViewMode, textViewFront, textViewEnd;
+    private TextView textViewMode, textViewFront, textViewEnd,textViewTime;
     private int[][][] game;
 private CountDownTimer c=new CountDownTimer(60*1000,1000) {
     @Override
     public void onTick(long l) {
-        System.out.println("enter this");
+        textViewTime.setText("剩\t"+String.valueOf(l/1000)+"\t秒");
         System.out.println(l/1000);
     }
 
@@ -75,6 +75,7 @@ private CountDownTimer c=new CountDownTimer(60*1000,1000) {
     public void onFinish() {
         System.out.println("enter here");
         System.out.println("done");
+        end();
     }
 };
     private int now = 1, right = 0, mode, last;
@@ -133,6 +134,7 @@ private CountDownTimer c=new CountDownTimer(60*1000,1000) {
         }
 
         last = game[mode].length;
+        textViewTime=findViewById(R.id.textViewTime);
         textViewMode = findViewById(R.id.textViewMode);
         textViewFront = findViewById(R.id.textViewF);
         textViewEnd = findViewById(R.id.textViewE);
@@ -426,41 +428,7 @@ private CountDownTimer c=new CountDownTimer(60*1000,1000) {
                             textViewEnd.setText(String.valueOf(game[mode][now][1]));
                             now++;
                         } else {
-                            final AlertDialog.Builder builderResult = new AlertDialog.Builder(OcrCaptureActivity.this).setTitle("詳細資料");
-                            LinearLayout linearLayoutResult = new LinearLayout(OcrCaptureActivity.this);
-                            linearLayoutResult.setOrientation(LinearLayout.VERTICAL);
-                            linearLayoutResult.setPadding(100, 0, 0, 0);
-                            TextView textViewLableResult = new TextView(OcrCaptureActivity.this);
-                            textViewLableResult.setText("遊戲結果");
-                            linearLayoutResult.addView(textViewLableResult);
-                            TextView textViewResult = new TextView(OcrCaptureActivity.this);
-                            textViewResult.setText(String.format("共%d題\n答對%d題", last, right));
-                            linearLayoutResult.addView(textViewResult);
-
-                            builderResult.setView(linearLayoutResult);
-                            builderResult.setNegativeButton("關閉", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    Intent intent = new Intent(OcrCaptureActivity.this, HomeActivity.class);
-                                    startActivity(intent);
-                                }
-                            });
-                            if (!difficult) {
-                                builderResult.setPositiveButton("確定", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialogInterface, int i) {
-                                        difficult=true;
-                                        giveGame();
-                                        now = 1;
-                                        right = 0;
-                                        last = game[mode].length;
-                                        textViewFront.setText(String.valueOf(game[mode][0][0]));
-                                        textViewEnd.setText(String.valueOf(game[mode][0][1]));
-                                    }
-                                });
-                            }
-                            AlertDialog dialogResult = builderResult.create();
-                            dialogResult.show();
+                            end();
                         }
                     }
                 });
@@ -555,5 +523,43 @@ private CountDownTimer c=new CountDownTimer(60*1000,1000) {
                     , {{9, 3, 3}, {8, 4, 2}, {4, 2, 2}, {6, 2, 3}, {8, 2, 4}}
             };
         }
+    }
+    private void end(){
+        final AlertDialog.Builder builderResult = new AlertDialog.Builder(OcrCaptureActivity.this).setTitle("詳細資料");
+        LinearLayout linearLayoutResult = new LinearLayout(OcrCaptureActivity.this);
+        linearLayoutResult.setOrientation(LinearLayout.VERTICAL);
+        linearLayoutResult.setPadding(100, 0, 0, 0);
+        TextView textViewLableResult = new TextView(OcrCaptureActivity.this);
+        textViewLableResult.setText("遊戲結果");
+        linearLayoutResult.addView(textViewLableResult);
+        TextView textViewResult = new TextView(OcrCaptureActivity.this);
+        textViewResult.setText(String.format("共%d題\n答對%d題", last, right));
+        linearLayoutResult.addView(textViewResult);
+
+        builderResult.setView(linearLayoutResult);
+        builderResult.setNegativeButton("關閉", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Intent intent = new Intent(OcrCaptureActivity.this, HomeActivity.class);
+                startActivity(intent);
+            }
+        });
+        if (!difficult) {
+            builderResult.setPositiveButton("確定", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    difficult=true;
+                    giveGame();
+                    now = 1;
+                    right = 0;
+                    last = game[mode].length;
+                    textViewFront.setText(String.valueOf(game[mode][0][0]));
+                    textViewEnd.setText(String.valueOf(game[mode][0][1]));
+                    c.start();
+                }
+            });
+        }
+        AlertDialog dialogResult = builderResult.create();
+        dialogResult.show();
     }
 }
