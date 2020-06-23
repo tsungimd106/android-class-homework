@@ -3,8 +3,11 @@ package com.google.android.gms.samples.vision.ocrreader;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.ColorSpace;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -60,7 +63,8 @@ public class HomeActivity extends AppCompatActivity {
 
     private void chanegePage(final String mode) {
         RadioGroup level = new RadioGroup(HomeActivity.this);
-
+        LayoutInflater inflater=this.getLayoutInflater();
+//        inflater.getContext().getAssets().g
         final AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this).setTitle("請選擇挑戰難度");
         LinearLayout linearLayout = new LinearLayout(HomeActivity.this);
         linearLayout.setOrientation(LinearLayout.VERTICAL);
@@ -71,8 +75,11 @@ public class HomeActivity extends AppCompatActivity {
         final RadioButton high = new RadioButton(HomeActivity.this);
         final RadioButton low = new RadioButton(HomeActivity.this);
 //        low.setSelected(false);
+
         high.setText("十位數");
         low.setText("個位數");
+        low.setTextSize(18);
+        high.setTextSize(18);
         level.addView(high);
         level.addView(low);
         level.check(low.getId());

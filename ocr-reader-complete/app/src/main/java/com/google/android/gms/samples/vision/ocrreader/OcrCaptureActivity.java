@@ -26,6 +26,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.hardware.Camera;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.speech.tts.TextToSpeech;
@@ -62,22 +64,22 @@ public final class OcrCaptureActivity extends AppCompatActivity {
     private static final String TAG = "OcrCaptureActivity";
     private String modeStr;
     private Boolean difficult;
-    private TextView textViewMode, textViewFront, textViewEnd,textViewTime;
+    private TextView textViewMode, textViewFront, textViewEnd, textViewTime;
     private int[][][] game;
-private CountDownTimer c=new CountDownTimer(60*1000,1000) {
-    @Override
-    public void onTick(long l) {
-        textViewTime.setText("剩\t"+String.valueOf(l/1000)+"\t秒");
-        System.out.println(l/1000);
-    }
+    private CountDownTimer c = new CountDownTimer(60 * 1000, 1000) {
+        @Override
+        public void onTick(long l) {
+            textViewTime.setText("剩\t" + String.valueOf(l / 1000) + "\t秒");
+            System.out.println(l / 1000);
+        }
 
-    @Override
-    public void onFinish() {
-        System.out.println("enter here");
-        System.out.println("done");
-        end();
-    }
-};
+        @Override
+        public void onFinish() {
+            System.out.println("enter here");
+            System.out.println("done");
+            end();
+        }
+    };
     private int now = 1, right = 0, mode, last;
     // Intent request code to handle updating play services if needed.
     private static final int RC_HANDLE_GMS = 9001;
@@ -116,7 +118,7 @@ private CountDownTimer c=new CountDownTimer(60*1000,1000) {
         graphicOverlay = (GraphicOverlay<OcrGraphic>) findViewById(R.id.graphicOverlay);
         modeStr = getIntent().getStringExtra("mode");
         difficult = getIntent().getBooleanExtra("difficult", false);
-        giveGame();
+        System.out.println("modeStr\t" + modeStr);
         switch (modeStr) {
             case "+":
                 mode = 0;
@@ -132,9 +134,15 @@ private CountDownTimer c=new CountDownTimer(60*1000,1000) {
                 break;
 
         }
+        if (modeStr.equals("+")) mode = 0;
+        else if (modeStr.equals("-")) mode = 1;
+        else if (modeStr.equals("×")) mode = 2;
+        else mode = 3;
 
+        System.out.print(mode);
+        giveGame();
         last = game[mode].length;
-        textViewTime=findViewById(R.id.textViewTime);
+        textViewTime = findViewById(R.id.textViewTime);
         textViewMode = findViewById(R.id.textViewMode);
         textViewFront = findViewById(R.id.textViewF);
         textViewEnd = findViewById(R.id.textViewE);
@@ -168,7 +176,7 @@ private CountDownTimer c=new CountDownTimer(60*1000,1000) {
                     public void onInit(final int status) {
                         if (status == TextToSpeech.SUCCESS) {
                             Log.d("OnInitListener", "Text to speech engine started successfully.");
-                            tts.setLanguage(Locale.US);
+                            tts.setLanguage(Locale.TAIWAN);
                         } else {
                             Log.d("OnInitListener", "Error starting the text to speech engine.");
                         }
@@ -404,6 +412,7 @@ private CountDownTimer c=new CountDownTimer(60*1000,1000) {
                 linearLayout.setPadding(100, 0, 0, 0);
                 TextView textViewLable = new TextView(OcrCaptureActivity.this);
                 textViewLable.setText("確認是" + text.getValue());
+                textViewLable.setTextSize(18);
                 linearLayout.addView(textViewLable);
 
                 builder.setView(linearLayout);
@@ -412,14 +421,21 @@ private CountDownTimer c=new CountDownTimer(60*1000,1000) {
                     public void onClick(DialogInterface dialog, int which) {
                     }
                 });
+
                 final TextBlock finalText = text;
                 builder.setPositiveButton("確認", new DialogInterface.OnClickListener() {
 
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
+
+                        String toSpeack="錯誤";
                         if (finalText.getValue().equals(String.valueOf(game[mode][now - 1][2]))) {
                             right++;
+                            toSpeack="正確";
+
                         }
+                        tts.speak(toSpeack, TextToSpeech.QUEUE_ADD, null, "DEFAULT");
+
 //                        System.out.println(finalText.getValue());
 //                        System.out.println(String.valueOf(game[mode][now-1][2]));
 //                        System.out.println(finalText.getValue().endsWith(String.valueOf(game[mode][now-1][2])));
@@ -524,16 +540,19 @@ private CountDownTimer c=new CountDownTimer(60*1000,1000) {
             };
         }
     }
-    private void end(){
-        final AlertDialog.Builder builderResult = new AlertDialog.Builder(OcrCaptureActivity.this).setTitle("詳細資料");
+
+    private void end() {
+        final AlertDialog.Builder builderResult = new AlertDialog.Builder(OcrCaptureActivity.this).setTitle("遊戲結果");
         LinearLayout linearLayoutResult = new LinearLayout(OcrCaptureActivity.this);
         linearLayoutResult.setOrientation(LinearLayout.VERTICAL);
         linearLayoutResult.setPadding(100, 0, 0, 0);
         TextView textViewLableResult = new TextView(OcrCaptureActivity.this);
-        textViewLableResult.setText("遊戲結果");
+        textViewLableResult.setText("");
+        textViewLableResult.setTextSize(18);
         linearLayoutResult.addView(textViewLableResult);
         TextView textViewResult = new TextView(OcrCaptureActivity.this);
-        textViewResult.setText(String.format("共%d題\n答對%d題", last, right));
+        textViewResult.setText(String.format("共%d題\n答對%d題\n是否挑戰十位數難度", last, right));
+        textViewResult.setTextSize(18);
         linearLayoutResult.addView(textViewResult);
 
         builderResult.setView(linearLayoutResult);
@@ -548,7 +567,7 @@ private CountDownTimer c=new CountDownTimer(60*1000,1000) {
             builderResult.setPositiveButton("確定", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
-                    difficult=true;
+                    difficult = true;
                     giveGame();
                     now = 1;
                     right = 0;
