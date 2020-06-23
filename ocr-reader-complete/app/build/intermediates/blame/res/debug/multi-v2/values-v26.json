@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "C:\\JAVA\\bording\\ocr-reader-complete\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-v26\\values-v26.xml",
+            "outputFile": "D:\\GIthub\\bording android\\bording\\ocr-reader-complete\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-v26\\values-v26.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\Chihyu\\.gradle\\caches\\transforms-1\\files-1.1\\design-27.1.1.aar\\cb9d49612782495b7ed42aa532eb45d4\\res\\values-v26\\values-v26.xml",
+                    "source": "C:\\Users\\daniel\\.gradle\\caches\\transforms-1\\files-1.1\\design-27.1.1.aar\\673c0a0db1c9e48754b5c7a20c292fe5\\res\\values-v26\\values-v26.xml",
                     "from": {
                         "startLines": "2,6",
                         "startColumns": "4,4",
@@ -23,7 +23,7 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\Chihyu\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-27.1.1.aar\\9b3f192c5bf603ee2c17a649eb159d11\\res\\values-v26\\values-v26.xml",
+                    "source": "C:\\Users\\daniel\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-27.1.1.aar\\e89796a38f7d5e3f61a5aed01a311e4e\\res\\values-v26\\values-v26.xml",
                     "from": {
                         "startLines": "2,3,4,8,12,16",
                         "startColumns": "4,4,4,4,4,4",
