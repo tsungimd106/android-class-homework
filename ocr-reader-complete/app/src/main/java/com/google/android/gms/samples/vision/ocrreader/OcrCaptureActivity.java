@@ -408,42 +408,48 @@ public final class OcrCaptureActivity extends AppCompatActivity {
                 tts.speak(text.getValue(), TextToSpeech.QUEUE_ADD, null, "DEFAULT");
                 final AlertDialog.Builder builder = new AlertDialog.Builder(OcrCaptureActivity.this).setTitle("詳細資料");
                 final LinearLayout linearLayout = new LinearLayout(OcrCaptureActivity.this);
+                //建立對話框及布局
                 linearLayout.setOrientation(LinearLayout.VERTICAL);
                 linearLayout.setPadding(100, 0, 0, 0);
+                //設定布局樣式
                 TextView textViewLable = new TextView(OcrCaptureActivity.this);
                 textViewLable.setText("確認是" + text.getValue());
                 textViewLable.setTextSize(18);
                 linearLayout.addView(textViewLable);
-
+                //建立文字方塊，設定樣式，放式剛剛所建立的布局中
                 builder.setView(linearLayout);
+                //設定對話方塊的布局
                 builder.setNegativeButton("關閉", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                     }
-                });
+                });//設定對話方塊的按鈕及其監聽器
 
                 final TextBlock finalText = text;
+                //設定對話方塊的按鈕及其監聽器
                 builder.setPositiveButton("確認", new DialogInterface.OnClickListener() {
 
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
 
-                        String toSpeack="錯誤";
+                        String toSpeack = "錯誤";//預設使用者錯誤
                         if (finalText.getValue().equals(String.valueOf(game[mode][now - 1][2]))) {
-                            right++;
-                            toSpeack="正確";
+                            //判斷使用者是否正確
+                            right++;//正確的話，right++
+                            toSpeack = "正確";//設定要講正確
 
                         }
+                        //講話
                         tts.speak(toSpeack, TextToSpeech.QUEUE_ADD, null, "DEFAULT");
 
-//                        System.out.println(finalText.getValue());
-//                        System.out.println(String.valueOf(game[mode][now-1][2]));
-//                        System.out.println(finalText.getValue().endsWith(String.valueOf(game[mode][now-1][2])));
+//                       //判斷是否最後一題
                         if (now != last) {
+                            //不是的話，改變題目
                             textViewFront.setText(String.valueOf(game[mode][now][0]));
                             textViewEnd.setText(String.valueOf(game[mode][now][1]));
-                            now++;
+                            now++;//題目++
                         } else {
+                            //是的話，執行end方法
                             end();
                         }
                     }
@@ -524,15 +530,15 @@ public final class OcrCaptureActivity extends AppCompatActivity {
     }
 
     private void giveGame() {
-        if (difficult) {
-            game = new int[][][]{
+        if (difficult) {//判斷難度變數
+            game = new int[][][]{//放十位數難度題目
                     {{52, 36, 88}, {37, 92, 129}, {59, 32, 91}, {48, 43, 91}, {57, 72, 129}}
                     , {{92, 35, 57}, {79, 22, 57}, {52, 34, 18}, {45, 27, 18}, {81, 23, 58}}
                     , {{11, 11, 121}, {12, 10, 120}, {11, 10, 110}, {12, 15, 185}, {12, 12, 144}}
                     , {{60, 12, 5}, {63, 21, 3}, {70, 14, 5}, {90, 45, 2}, {81, 27, 3}}
             };
         } else {
-            game = new int[][][]{
+            game = new int[][][]{//放個位數難度題目
                     {{5, 4, 9}, {8, 6, 14}, {3, 7, 10}, {6, 3, 9}, {2, 7, 9}}
                     , {{9, 5, 4}, {8, 3, 5}, {5, 2, 3}, {7, 4, 3}, {7, 3, 4}}
                     , {{2, 7, 14}, {9, 2, 18}, {5, 2, 10}, {3, 3, 9}, {8, 7, 56}}
@@ -542,39 +548,45 @@ public final class OcrCaptureActivity extends AppCompatActivity {
     }
 
     private void end() {
+        c.cancel();
         final AlertDialog.Builder builderResult = new AlertDialog.Builder(OcrCaptureActivity.this).setTitle("遊戲結果");
         LinearLayout linearLayoutResult = new LinearLayout(OcrCaptureActivity.this);
+        //建立對話方塊及布局
         linearLayoutResult.setOrientation(LinearLayout.VERTICAL);
         linearLayoutResult.setPadding(100, 0, 0, 0);
-        TextView textViewLableResult = new TextView(OcrCaptureActivity.this);
-        textViewLableResult.setText("");
-        textViewLableResult.setTextSize(18);
-        linearLayoutResult.addView(textViewLableResult);
+        //設定布局樣式
+
         TextView textViewResult = new TextView(OcrCaptureActivity.this);
-        textViewResult.setText(String.format("共%d題\n答對%d題\n是否挑戰十位數難度", last, right));
+        textViewResult.setText(String.format("共%d題\n答對%d題", last, right));
         textViewResult.setTextSize(18);
         linearLayoutResult.addView(textViewResult);
-
-        builderResult.setView(linearLayoutResult);
-        builderResult.setNegativeButton("關閉", new DialogInterface.OnClickListener() {
+        //建立文字方塊，設定樣式，放入布局中
+        builderResult.setView(linearLayoutResult);//設定對話方布局
+        builderResult.setNegativeButton("關閉",new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Intent intent = new Intent(OcrCaptureActivity.this, HomeActivity.class);
                 startActivity(intent);
             }
-        });
-        if (!difficult) {
+        });//設定對話方塊按鈕及其監聽器
+        if (!difficult) {//判斷難度是否為個位數
+            TextView textViewdifficult=new TextView(OcrCaptureActivity.this);
+            textViewdifficult.setText("是否挑戰十位數難度");
+            textViewdifficult.setTextSize(18);
+            linearLayoutResult.addView(textViewdifficult);
+            //設定對話方塊按鈕及其監聽器
             builderResult.setPositiveButton("確定", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
-                    difficult = true;
-                    giveGame();
-                    now = 1;
-                    right = 0;
-                    last = game[mode].length;
+                    difficult = true;//改變難度布林變數
+                    giveGame();//更換題目
+                    now = 1;//更改題數為一
+                    right = 0;//答對題數為0
+                    last = game[mode].length;//更改題數數量
                     textViewFront.setText(String.valueOf(game[mode][0][0]));
                     textViewEnd.setText(String.valueOf(game[mode][0][1]));
-                    c.start();
+                    //題目放到文字方塊中
+                    c.start();//開始計時
                 }
             });
         }

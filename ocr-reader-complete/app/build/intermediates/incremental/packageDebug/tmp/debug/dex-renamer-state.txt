@@ -1,4 +1,4 @@
-#Tue Jun 23 10:23:34 CST 2020
+#Tue Jun 23 13:52:15 CST 2020
 base.0=D\:\\GIthub\\bording android\\bording\\ocr-reader-complete\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\0
 path.0=classes.dex
 renamed.0=classes.dex
